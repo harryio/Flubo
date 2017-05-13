@@ -5,4 +5,10 @@
     <color name="accent">#FF5252</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
+    <color name="divider_color">#BDBDBD</color>
+
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+
+    <color name="grey_700">#616161</color>
 </resources>
