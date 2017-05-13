@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.harryio.flubo.R;
@@ -32,6 +33,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         TextView title;
         @BindView(R.id.description)
         TextView description;
+        @BindView(R.id.checkbox)
+        CheckBox checkBox;
 
         private ReminderAdapter adapter;
 
@@ -53,7 +56,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         }
     }
 
-
     @Override
     public ReminderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -63,7 +65,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     @Override
     public void onBindViewHolder(ReminderViewHolder holder, int position) {
+        Reminder reminder = reminders.get(position);
 
+        holder.title.setText(reminder.getTitle());
+        holder.description.setText(reminder.getDescription());
+        holder.checkBox.setChecked(reminder.isCompleted());
     }
 
     public void setReminders(List<Reminder> reminders) {
