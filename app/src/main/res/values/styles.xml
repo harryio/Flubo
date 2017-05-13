@@ -10,8 +10,8 @@
     </style>
 
     <style name="AppTheme.NoActionBar">
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="CustomCheckbox" parent="Theme.AppCompat.Light">
