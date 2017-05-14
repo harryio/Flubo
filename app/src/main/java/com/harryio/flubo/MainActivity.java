@@ -12,6 +12,7 @@ import com.harryio.flubo.model.Reminder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class MainActivity extends AppCompatActivity implements ReminderAdapter.ClickListener {
@@ -53,6 +54,11 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.C
 
     @Override
     public void onListCheckboxClicked(Reminder reminder, boolean isChecked) {
+
+    }
+
+    @OnClick(R.id.fab)
+    public void onFabClicked() {
 
     }
 
