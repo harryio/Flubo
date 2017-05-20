@@ -5,6 +5,7 @@ public class Reminder {
     private String description;
     private boolean completed;
     private long remindTime = -1L;
+    private String repeatInterval;
 
     private Reminder(String title, String description, boolean completed, long remindTime) {
         this.title = title;
@@ -49,11 +50,20 @@ public class Reminder {
         return remindTime != -1L;
     }
 
+    public RepeatInterval getRepeatInterval() {
+        return repeatInterval == null ? RepeatInterval.ONE_TIME : RepeatInterval.valueOf(repeatInterval);
+    }
+
+    public void setRepeatInterval(RepeatInterval repeatInterval) {
+        this.repeatInterval = repeatInterval.name();
+    }
+
     public static class Builder {
         private String title;
         private String description;
         private boolean completed;
         private long remindTime = -1L;
+        private RepeatInterval repeatInterval;
 
         public Builder title(String title) {
             this.title = title;
@@ -72,6 +82,11 @@ public class Reminder {
 
         public Builder remindAt(long remindTime) {
             this.remindTime = remindTime;
+            return this;
+        }
+
+        public Builder withRepeatInterval(RepeatInterval repeatInterval) {
+            this.repeatInterval = repeatInterval;
             return this;
         }
 

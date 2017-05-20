@@ -23,4 +23,8 @@
         <item name="colorControlActivated">@color/grey_700</item>
     </style>
 
+    <style name="RepeatIntervalDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/primary</item>
+    </style>
+
 </resources>

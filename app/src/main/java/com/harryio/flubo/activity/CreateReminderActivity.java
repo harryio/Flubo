@@ -20,7 +20,9 @@ import android.widget.TimePicker;
 import com.harryio.flubo.DataLayout;
 import com.harryio.flubo.R;
 import com.harryio.flubo.model.Reminder;
+import com.harryio.flubo.model.RepeatInterval;
 import com.harryio.flubo.utils.DateUtils;
+import com.harryio.flubo.utils.PopupUtils;
 
 import java.util.Calendar;
 
@@ -56,6 +58,7 @@ public class CreateReminderActivity extends BaseActivity implements
     private Calendar calendar;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
+    private RepeatInterval repeatInterval = RepeatInterval.ONE_TIME;
 
     public static Intent getCallingIntent(Context context) {
         return new Intent(context, CreateReminderActivity.class);
@@ -92,6 +95,8 @@ public class CreateReminderActivity extends BaseActivity implements
     private void setUpReminderViews() {
         dateView.setDataValue("Today");
         timeView.setDataValue(DateFormat.getTimeFormat(this).format(calendar.getTime()));
+        repeatView.setDataValue(getResources()
+                .getStringArray(R.array.repeat_intervals)[repeatInterval.ordinal()]);
     }
 
     @OnClick(R.id.remindView)
@@ -116,6 +121,13 @@ public class CreateReminderActivity extends BaseActivity implements
 
     @OnClick(R.id.repeatView)
     public void onRepeatViewClicked() {
+        PopupUtils.showRepeatIntervalDialog(this, repeatInterval.ordinal(), new PopupUtils.RepeatIntervalSelectedListener() {
+            @Override
+            public void onRepeatIntervalSelected(int which, String intervalString) {
+                repeatInterval = RepeatInterval.values()[which];
+                repeatView.setDataValue(intervalString);
+            }
+        });
     }
 
     @OnClick(R.id.fab)
@@ -127,6 +139,7 @@ public class CreateReminderActivity extends BaseActivity implements
                 .description(descriptionEdittext.getText().toString())
                 .isCompleted(false)
                 .remindAt(calendar.getTimeInMillis())
+                .withRepeatInterval(repeatInterval)
                 .create();
     }
 
