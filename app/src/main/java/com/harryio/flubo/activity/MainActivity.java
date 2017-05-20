@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import com.harryio.flubo.R;
 import com.harryio.flubo.adapters.ReminderAdapter;
 import com.harryio.flubo.model.Reminder;
+import com.harryio.flubo.utils.Navigator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements ReminderAdapter.C
 
     @OnClick(R.id.fab)
     public void onFabClicked() {
-
+        Navigator.navigateToCreateReminderActivity(this);
     }
 
     @Override

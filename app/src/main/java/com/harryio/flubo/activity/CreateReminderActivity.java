@@ -1,5 +1,7 @@
 package com.harryio.flubo.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CreateReminderActivity extends AppCompatActivity {
+    private static final String TAG = "CreateReminderActivity";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -34,6 +37,10 @@ public class CreateReminderActivity extends AppCompatActivity {
     DataLayout repeatView;
     @BindView(R.id.dateTimeView)
     LinearLayout dateTimeView;
+
+    public static Intent getCallingIntent(Context context) {
+        return new Intent(context, CreateReminderActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
