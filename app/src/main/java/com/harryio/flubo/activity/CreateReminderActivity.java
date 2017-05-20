@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.DatePicker;
@@ -18,6 +19,8 @@ import android.widget.TimePicker;
 
 import com.harryio.flubo.DataLayout;
 import com.harryio.flubo.R;
+import com.harryio.flubo.model.Reminder;
+import com.harryio.flubo.utils.DateUtils;
 
 import java.util.Calendar;
 
@@ -117,7 +120,29 @@ public class CreateReminderActivity extends BaseActivity implements
 
     @OnClick(R.id.fab)
     public void onFabClicked() {
+        if (!isReminderDataValid()) return;
 
+        Reminder reminder = new Reminder.Builder()
+                .title(titleEdittext.getText().toString())
+                .description(descriptionEdittext.getText().toString())
+                .isCompleted(false)
+                .remindAt(calendar.getTimeInMillis())
+                .create();
+    }
+
+    private boolean isReminderDataValid() {
+        String title = titleEdittext.getText().toString();
+        if (TextUtils.isEmpty(title)) {
+            showShortToast(getString(R.string.create_reminder_empty_title_error_message));
+            return false;
+        }
+
+        if (DateUtils.isTimeInPast(calendar.getTimeInMillis())) {
+            showShortToast(getString(R.string.create_reminder_invalid_reminder_time_message));
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -125,12 +150,20 @@ public class CreateReminderActivity extends BaseActivity implements
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        if (DateUtils.isToday(calendar.getTimeInMillis())) {
+            dateView.setDataValue("Today");
+        } else {
+            dateView.setDataValue(DateFormat.getDateFormat(this).format(calendar.getTime()));
+        }
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
+
+        timeView.setDataValue(DateFormat.getTimeFormat(this).format(calendar.getTime()));
     }
 
     private void animateInDateTimeViews() {
