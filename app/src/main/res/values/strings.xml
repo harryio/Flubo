@@ -3,4 +3,5 @@
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="activity_create_title">Create Reminder</string>
+    <string name="create_reminder_empty_title_error_message">Title cannot be empty</string>
 </resources>

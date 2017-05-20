@@ -105,6 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="?listPreferredItemHeight"
                     android:layout_marginTop="4dp"
+                    android:visibility="gone"
                     app:dataIcon="@drawable/ic_date"
                     app:dataTitle="Date"/>
 
@@ -113,6 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="?listPreferredItemHeight"
                     android:layout_marginTop="4dp"
+                    android:visibility="gone"
                     app:dataIcon="@drawable/ic_time"
                     app:dataTitle="Time"/>
 
@@ -121,6 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="?listPreferredItemHeight"
                     android:layout_marginTop="4dp"
+                    android:visibility="gone"
                     app:dataIcon="@drawable/ic_repeat"
                     app:dataTitle="Repeat"/>
 
