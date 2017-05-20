@@ -107,8 +107,10 @@ public class CreateReminderActivity extends BaseActivity implements
         Utils.hideKeyboard(this, descriptionEdittext);
         shouldSetReminder = !shouldSetReminder;
         if (shouldSetReminder) {
+            remindView.setDataValue("ON");
             animateInDateTimeViews();
         } else {
+            remindView.setDataValue("OFF");
             animateOutDateTimeViews();
         }
     }
