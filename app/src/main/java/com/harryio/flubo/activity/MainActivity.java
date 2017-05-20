@@ -1,4 +1,4 @@
-package com.harryio.flubo;
+package com.harryio.flubo.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import com.harryio.flubo.R;
 import com.harryio.flubo.adapters.ReminderAdapter;
 import com.harryio.flubo.model.Reminder;
 
