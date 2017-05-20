@@ -23,6 +23,7 @@ import com.harryio.flubo.model.Reminder;
 import com.harryio.flubo.model.RepeatInterval;
 import com.harryio.flubo.utils.DateUtils;
 import com.harryio.flubo.utils.PopupUtils;
+import com.harryio.flubo.utils.Utils;
 
 import java.util.Calendar;
 
@@ -70,6 +71,7 @@ public class CreateReminderActivity extends BaseActivity implements
         setContentView(R.layout.activity_create_reminder);
         ButterKnife.bind(this);
 
+        titleEdittext.requestFocus();
         setUpCalendar();
         setUpDateAndTimePickerDialogs();
         setUpReminderViews();
@@ -101,6 +103,8 @@ public class CreateReminderActivity extends BaseActivity implements
 
     @OnClick(R.id.remindView)
     public void onRemindViewClicked() {
+        Utils.hideKeyboard(this, titleEdittext);
+        Utils.hideKeyboard(this, descriptionEdittext);
         shouldSetReminder = !shouldSetReminder;
         if (shouldSetReminder) {
             animateInDateTimeViews();
