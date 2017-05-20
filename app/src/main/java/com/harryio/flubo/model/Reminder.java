@@ -4,6 +4,7 @@ public class Reminder {
     private String title;
     private String description;
     private boolean completed;
+    private long remindTime = -1L;
 
     public String getTitle() {
         return title;
@@ -27,5 +28,13 @@ public class Reminder {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public long getRemindTime() {
+        return remindTime;
+    }
+
+    public void setRemindTime(long remindTime) {
+        this.remindTime = remindTime;
     }
 }
