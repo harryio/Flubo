@@ -34,7 +34,7 @@ import butterknife.OnClick;
 public class CreateReminderActivity extends BaseActivity implements
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     private static final String TAG = "CreateReminderActivity";
-    private static final int ANIM_DURATION = 200;
+    private static final int ANIM_DURATION = 165;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
