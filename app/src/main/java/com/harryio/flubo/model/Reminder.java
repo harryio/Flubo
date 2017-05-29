@@ -1,17 +1,30 @@
 package com.harryio.flubo.model;
 
+import java.util.UUID;
+
 public class Reminder {
+    private String id;
     private String title;
     private String description;
     private boolean completed;
     private long remindTime = -1L;
     private String repeatInterval;
 
+    private Reminder() {
+        id = UUID.randomUUID().toString();
+    }
+
     private Reminder(String title, String description, boolean completed, long remindTime) {
+        this();
+
         this.title = title;
         this.description = description;
         this.completed = completed;
         this.remindTime = remindTime;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getTitle() {
