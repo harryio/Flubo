@@ -80,7 +80,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <com.harryio.flubo.DataLayout
+        <com.harryio.flubo.customview.DataLayout
             android:id="@+id/remindView"
             android:layout_width="match_parent"
             android:layout_height="?listPreferredItemHeight"
@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.harryio.flubo.DataLayout
+                <com.harryio.flubo.customview.DataLayout
                     android:id="@+id/dateView"
                     android:layout_width="match_parent"
                     android:layout_height="?listPreferredItemHeight"
@@ -109,7 +109,7 @@
                     app:dataIcon="@drawable/ic_date"
                     app:dataTitle="Date"/>
 
-                <com.harryio.flubo.DataLayout
+                <com.harryio.flubo.customview.DataLayout
                     android:id="@+id/timeView"
                     android:layout_width="match_parent"
                     android:layout_height="?listPreferredItemHeight"
@@ -118,7 +118,7 @@
                     app:dataIcon="@drawable/ic_time"
                     app:dataTitle="Time"/>
 
-                <com.harryio.flubo.DataLayout
+                <com.harryio.flubo.customview.DataLayout
                     android:id="@+id/repeatView"
                     android:layout_width="match_parent"
                     android:layout_height="?listPreferredItemHeight"

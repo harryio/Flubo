@@ -17,8 +17,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
 
-import com.harryio.flubo.DataLayout;
 import com.harryio.flubo.R;
+import com.harryio.flubo.customview.DataLayout;
 import com.harryio.flubo.model.Reminder;
 import com.harryio.flubo.model.RepeatInterval;
 import com.harryio.flubo.utils.DateUtils;
@@ -31,10 +31,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CreateReminderActivity extends BaseActivity implements
+public class CreateOrEditReminderActivity extends BaseActivity implements
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     private static final String TAG = "CreateReminderActivity";
     private static final int ANIM_DURATION = 165;
+
+    private static final String ARG_REMINDER_ID = PACKAGE_NAME + "ARG_REMINDER_ID";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -62,13 +64,20 @@ public class CreateReminderActivity extends BaseActivity implements
     private RepeatInterval repeatInterval = RepeatInterval.ONE_TIME;
 
     public static Intent getCallingIntent(Context context) {
-        return new Intent(context, CreateReminderActivity.class);
+        return new Intent(context, CreateOrEditReminderActivity.class);
+    }
+
+    public static Intent getCallingIntent(Context context, String reminderId) {
+        Intent intent = new Intent(context, CreateOrEditReminderActivity.class);
+        intent.putExtra(ARG_REMINDER_ID, reminderId);
+
+        return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_reminder);
+        setContentView(R.layout.activity_create_or_edit_reminder);
         ButterKnife.bind(this);
 
         titleEdittext.requestFocus();
