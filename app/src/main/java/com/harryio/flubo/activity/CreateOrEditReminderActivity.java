@@ -63,6 +63,10 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
     private TimePickerDialog timePickerDialog;
     private RepeatInterval repeatInterval = RepeatInterval.ONE_TIME;
 
+    private String[] repeatIntervalStrings;
+
+    private Reminder reminder;
+
     public static Intent getCallingIntent(Context context) {
         return new Intent(context, CreateOrEditReminderActivity.class);
     }
@@ -80,15 +84,37 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
         setContentView(R.layout.activity_create_or_edit_reminder);
         ButterKnife.bind(this);
 
+        repeatIntervalStrings = getResources().getStringArray(R.array.repeat_intervals);
         titleEdittext.requestFocus();
+        setUpReminderIfPresent();
         setUpCalendar();
         setUpDateAndTimePickerDialogs();
         setUpReminderViews();
     }
 
+    private void setUpReminderIfPresent() {
+        Intent intent = getIntent();
+        if (intent.hasExtra(ARG_REMINDER_ID)) {
+            String reminderId = intent.getStringExtra(ARG_REMINDER_ID);
+            //todo fetch reminder here
+            titleEdittext.setText(reminder.getTitle());
+            descriptionEdittext.setText(reminder.getDescription());
+            shouldSetReminder = reminder.isRemiderSet();
+            repeatInterval = reminder.getRepeatInterval();
+        }
+    }
+
     private void setUpCalendar() {
         calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR, 1);
+        if (reminder == null) {
+            calendar.add(Calendar.HOUR, 1);
+        } else {
+            calendar.setTimeInMillis(reminder.getRemindTime());
+        }
+
+        if (shouldSetReminder) {
+            setReminder();
+        }
     }
 
     private void setUpDateAndTimePickerDialogs() {
@@ -104,24 +130,34 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
     }
 
     private void setUpReminderViews() {
-        dateView.setDataValue("Today");
-        timeView.setDataValue(DateFormat.getTimeFormat(this).format(calendar.getTime()));
-        repeatView.setDataValue(getResources()
-                .getStringArray(R.array.repeat_intervals)[repeatInterval.ordinal()]);
+        long time = calendar.getTimeInMillis();
+        dateView.setDataValue(DateUtils.getDateString(this, time));
+        timeView.setDataValue(DateUtils.getTimeString(this, time));
+
+        repeatView.setDataValue(repeatIntervalStrings[repeatInterval.ordinal()]);
     }
 
     @OnClick(R.id.remindView)
     public void onRemindViewClicked() {
         Utils.hideKeyboard(this, titleEdittext);
         Utils.hideKeyboard(this, descriptionEdittext);
+
         shouldSetReminder = !shouldSetReminder;
         if (shouldSetReminder) {
-            remindView.setDataValue("ON");
-            animateInDateTimeViews();
+            setReminder();
         } else {
-            remindView.setDataValue("OFF");
-            animateOutDateTimeViews();
+            removeReminder();
         }
+    }
+
+    private void setReminder() {
+        remindView.setDataValue("ON");
+        animateInDateTimeViews();
+    }
+
+    private void removeReminder() {
+        remindView.setDataValue("OFF");
+        animateOutDateTimeViews();
     }
 
     @OnClick(R.id.dateView)
