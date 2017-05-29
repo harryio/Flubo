@@ -19,6 +19,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        development {
+            resConfigs("en", "xxhdpi")
+        }
+
+        prod {
+
+        }
+    }
+
+    if (project.hasProperty('devBuild')) {
+        aaptOptions.cruncherEnabled = false
+    }
 }
 
 ext {
