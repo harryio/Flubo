@@ -1,6 +1,7 @@
 package com.harryio.flubo.model;
 
 public class Reminder {
+    private long id;
     private String title;
     private String description;
     private boolean completed;
@@ -12,6 +13,10 @@ public class Reminder {
         this.description = description;
         this.completed = completed;
         this.remindTime = remindTime;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getTitle() {
