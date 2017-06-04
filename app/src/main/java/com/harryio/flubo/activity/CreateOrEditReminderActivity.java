@@ -5,12 +5,14 @@ import android.animation.ObjectAnimator;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -90,6 +92,38 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
         setUpCalendar();
         setUpDateAndTimePickerDialogs();
         setUpReminderViews();
+        setUpToolbar();
+    }
+
+    private void setUpToolbar() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        if (reminder != null) {
+            toolbar.inflateMenu(R.menu.menu_create_edit_activity);
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.item_delete:
+                            PopupUtils.showConfirmDeleteDialog(CreateOrEditReminderActivity.this,
+                                    new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ReminderDAO.delete(CreateOrEditReminderActivity.this, reminder.getId());
+                                    finish();
+                                }
+                            });
+                            return true;
+
+                        default: return false;
+                    }
+                }
+            });
+        }
     }
 
     private void setUpReminderIfPresent() {

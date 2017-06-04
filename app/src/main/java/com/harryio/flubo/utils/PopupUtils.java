@@ -35,4 +35,13 @@ public class PopupUtils {
     public interface RepeatIntervalSelectedListener {
         void onRepeatIntervalSelected(int which, String intervalString);
     }
+
+    public static void showConfirmDeleteDialog(Context context, DialogInterface.OnClickListener onClickListener) {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.dialog_delete_title)
+                .setMessage(R.string.dialog_delete_message)
+                .setPositiveButton(R.string.dialog_delete_option, onClickListener)
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
 }
