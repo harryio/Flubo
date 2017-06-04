@@ -12,6 +12,7 @@ import com.harryio.flubo.model.Reminder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.harryio.flubo.data.ReminderContract.ReminderEntry.COLUMN_TIME_MILLIS;
 import static com.harryio.flubo.data.ReminderContract.ReminderEntry.getReminderListUri;
 
 public class ReminderLoader extends AsyncTaskLoader<List<Reminder>> {
@@ -37,7 +38,7 @@ public class ReminderLoader extends AsyncTaskLoader<List<Reminder>> {
     @Override
     public List<Reminder> loadInBackground() {
         Uri uri = getReminderListUri();
-        Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
+        Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, COLUMN_TIME_MILLIS + " DESC");
         if (cursor != null) {
             List<Reminder> reminders = new ArrayList<>(cursor.getCount());
             try {
