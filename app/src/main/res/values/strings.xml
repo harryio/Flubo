@@ -5,6 +5,7 @@
     <string name="activity_create_title">Create Reminder</string>
     <string name="create_reminder_empty_title_error_message">Title cannot be empty</string>
     <string name="create_reminder_invalid_reminder_time_message">Reminder cannot be set in the past</string>
+    <string name="menu_option_delete_all">Delete All</string>
     <string-array name="repeat_intervals">
         <item>Do not Repeat</item>
         <item>Daily</item>

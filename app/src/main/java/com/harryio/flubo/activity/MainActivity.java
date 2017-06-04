@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -77,8 +78,38 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
 
+        setUpToolbar();
         setUpRecyclerView();
         getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    private void setUpToolbar() {
+        toolbar.inflateMenu(R.menu.menu_main_activity);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.item_delete_all:
+                        final List<Reminder> reminders = adapter.getReminders();
+                        ReminderDAO.deleteAll(MainActivity.this);
+                        Snackbar snackbar = Snackbar.make(rootView, "All reminders deleted", Snackbar.LENGTH_LONG)
+                                .setAction("UNDO", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        ReminderDAO.insert(MainActivity.this, reminders);
+                                    }
+                                });
+                        snackbar.setActionTextColor(Color.RED);
+                        View snackbarView = snackbar.getView();
+                        ((TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text))
+                                .setTextColor(Color.YELLOW);
+                        snackbar.show();
+                        return true;
+
+                    default: return false;
+                }
+            }
+        });
     }
 
     private void setUpRecyclerView() {
