@@ -16,9 +16,20 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CreateReminderActivity"
+
+        <activity
+            android:name=".activity.CreateReminderActivity"
             android:windowSoftInputMode="stateVisible">
         </activity>
+
+        <provider
+            android:name="com.harryio.flubo.data.ReminderProvider"
+            android:authorities="com.harryio.flubo.provider"
+            android:enabled="true"
+            android:exported="false"
+            android:protectionLevel="signature"
+            android:syncable="true"/>
+
     </application>
 
 </manifest>
