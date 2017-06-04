@@ -188,15 +188,19 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
     public void onFabClicked() {
         if (!isReminderDataValid()) return;
 
-        Reminder reminder = new Reminder.Builder()
+        Reminder.Builder builder = new Reminder.Builder()
                 .title(titleEdittext.getText().toString())
                 .description(descriptionEdittext.getText().toString())
                 .isCompleted(false)
                 .remindAt(calendar.getTimeInMillis())
-                .withRepeatInterval(repeatInterval)
-                .create();
+                .withRepeatInterval(repeatInterval);
+        if (reminder != null) {
+            builder.id(reminder.getId());
+            ReminderDAO.update(this, reminder.getId(), builder.create());
+        } else {
+            ReminderDAO.insert(this, builder.create());
+        }
 
-        ReminderDAO.insert(this, reminder);
         finish();
     }
 

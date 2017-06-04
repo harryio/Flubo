@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import com.harryio.flubo.model.Reminder;
 
+import static android.provider.BaseColumns._ID;
 import static com.harryio.flubo.data.ReminderContract.ReminderEntry.buildReminderUri;
 import static com.harryio.flubo.data.ReminderContract.ReminderEntry.getReminderListUri;
 
@@ -27,5 +28,11 @@ public class ReminderDAO {
         }
 
         return null;
+    }
+
+    public static void update(Context context, long id, Reminder reminder) {
+        ContentValues contentValues = DatabaseUtils.getInsertContentValues(reminder);
+        context.getContentResolver().update(getReminderListUri(), contentValues, _ID + "=?",
+                new String[]{String.valueOf(id)});
     }
 }
