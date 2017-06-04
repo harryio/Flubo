@@ -1,4 +1,4 @@
-package com.harryio.flubo;
+package com.harryio.flubo.customview;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.harryio.flubo.R;
 
 public class DataLayout extends RelativeLayout {
     private TextView defaultValueTextView;

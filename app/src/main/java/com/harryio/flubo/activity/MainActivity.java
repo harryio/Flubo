@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
 
     @Override
     public void onListItemClicked(Reminder reminder) {
-
+        Navigator.navigateToEditRemiderActivity(this, reminder.getId());
     }
 
     @Override
