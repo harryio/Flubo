@@ -35,4 +35,9 @@ public class ReminderDAO {
         context.getContentResolver().update(getReminderListUri(), contentValues, _ID + "=?",
                 new String[]{String.valueOf(id)});
     }
+
+    public static void delete(Context context, long id) {
+        context.getContentResolver().delete(getReminderListUri(), _ID + "=?",
+                new String[]{String.valueOf(id)});
+    }
 }

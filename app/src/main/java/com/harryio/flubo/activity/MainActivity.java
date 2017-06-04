@@ -2,14 +2,20 @@ package com.harryio.flubo.activity;
 
 import android.app.LoaderManager;
 import android.content.Loader;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
+import android.widget.TextView;
 
 import com.harryio.flubo.R;
 import com.harryio.flubo.adapters.ReminderAdapter;
+import com.harryio.flubo.data.ReminderDAO;
 import com.harryio.flubo.data.ReminderLoader;
 import com.harryio.flubo.model.Reminder;
 import com.harryio.flubo.utils.Navigator;
@@ -27,6 +33,8 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
 
     private static final int LOADER_ID = 12;
 
+    @BindView(R.id.rootView)
+    View rootView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.appBarLayout)
@@ -36,6 +44,32 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
 
     private Unbinder unbinder;
     private ReminderAdapter adapter;
+    private ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper
+            .SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                              RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            final Reminder reminder = adapter.getReminderAt(viewHolder.getAdapterPosition());
+            ReminderDAO.delete(MainActivity.this, reminder.getId());
+            Snackbar snackbar = Snackbar.make(rootView, "Reminder Deleted", Snackbar.LENGTH_LONG)
+                    .setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ReminderDAO.insert(MainActivity.this, reminder);
+                        }
+                    });
+            snackbar.setActionTextColor(Color.RED);
+            View snackbarView = snackbar.getView();
+            ((TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text))
+                    .setTextColor(Color.YELLOW);
+            snackbar.show();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +84,9 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
     private void setUpRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         adapter = new ReminderAdapter(this);
         adapter.setClickListener(this);
