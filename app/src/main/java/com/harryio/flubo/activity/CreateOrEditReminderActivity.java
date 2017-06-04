@@ -124,6 +124,8 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
                 }
             });
         }
+        String title = getString(reminder == null ? R.string.activity_create_title : R.string.activity_edit_title);
+        toolbar.setTitle(title);
     }
 
     private void setUpReminderIfPresent() {
