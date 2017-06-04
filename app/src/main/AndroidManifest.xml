@@ -16,16 +16,27 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CreateOrEditReminderActivity" />
+        <activity android:name=".activity.CreateOrEditReminderActivity"/>
 
         <provider
-            android:name="com.harryio.flubo.data.ReminderProvider"
+            android:name=".data.ReminderProvider"
             android:authorities="com.harryio.flubo.provider"
             android:enabled="true"
             android:exported="false"
             android:protectionLevel="signature"
             android:syncable="true"/>
 
+        <receiver
+            android:name=".receiver.NotificationPublisher"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>

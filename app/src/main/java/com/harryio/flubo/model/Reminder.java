@@ -76,7 +76,7 @@ public class Reminder {
         private String description;
         private boolean completed;
         private long remindTime = -1L;
-        private RepeatInterval repeatInterval;
+        private RepeatInterval repeatInterval = RepeatInterval.ONE_TIME;
 
         public Builder id(long id) {
             this.id = id;
