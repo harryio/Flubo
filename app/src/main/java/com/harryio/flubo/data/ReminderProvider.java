@@ -11,10 +11,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import static android.provider.BaseColumns._ID;
-import static com.harryio.flubo.data.ReminderDbContract.CONTENT_AUTHORITY;
-import static com.harryio.flubo.data.ReminderDbContract.ReminderEntry.CONTENT_TYPE_ITEM;
-import static com.harryio.flubo.data.ReminderDbContract.ReminderEntry.CONTENT_TYPE_LIST;
-import static com.harryio.flubo.data.ReminderDbContract.ReminderEntry.TABLE_NAME;
+import static com.harryio.flubo.data.ReminderContract.CONTENT_AUTHORITY;
+import static com.harryio.flubo.data.ReminderContract.ReminderEntry.CONTENT_TYPE_ITEM;
+import static com.harryio.flubo.data.ReminderContract.ReminderEntry.CONTENT_TYPE_LIST;
+import static com.harryio.flubo.data.ReminderContract.ReminderEntry.TABLE_NAME;
 
 //Reference https://guides.codepath.com/android/Creating-Content-Providers
 public class ReminderProvider extends ContentProvider {
@@ -97,7 +97,7 @@ public class ReminderProvider extends ContentProvider {
             case REMINDER_LIST:
                 long _id = db.insert(TABLE_NAME, null, values);
                 if (_id > 0) {
-                    returnUri = ReminderDbContract.ReminderEntry.buildReminderUri(_id);
+                    returnUri = ReminderContract.ReminderEntry.buildReminderUri(_id);
                 } else {
                     throw new IllegalStateException("Failed to insert reminders");
                 }

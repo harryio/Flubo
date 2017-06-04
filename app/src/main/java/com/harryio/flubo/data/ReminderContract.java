@@ -4,7 +4,7 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-class ReminderDbContract {
+class ReminderContract {
     static final String CONTENT_AUTHORITY = "com.harryio.flubo.provider";
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
@@ -21,11 +21,15 @@ class ReminderDbContract {
         static final String COLUMN_TITLE = "title";
         static final String COLUMN_DESCRIPTION = "description";
         static final String COLUMN_TIME_MILLIS = "time";
-        static final String COLUMN_REMIND = "remind";
+        static final String COLUMN_COMPLETED = "completed";
         static final String COLUMN_REPEAT_INTERVAL = "repeatInterval";
 
         static Uri buildReminderUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        static Uri getReminderListUri() {
+            return CONTENT_URI;
         }
     }
 }

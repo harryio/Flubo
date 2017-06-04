@@ -1,5 +1,7 @@
 package com.harryio.flubo.activity;
 
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,16 +10,22 @@ import android.support.v7.widget.Toolbar;
 
 import com.harryio.flubo.R;
 import com.harryio.flubo.adapters.ReminderAdapter;
+import com.harryio.flubo.data.ReminderLoader;
 import com.harryio.flubo.model.Reminder;
 import com.harryio.flubo.utils.Navigator;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class MainActivity extends BaseActivity implements ReminderAdapter.ClickListener {
+public class MainActivity extends BaseActivity implements ReminderAdapter.ClickListener,
+        LoaderManager.LoaderCallbacks<List<Reminder>> {
     private static final String TAG = "MainActivity";
+
+    private static final int LOADER_ID = 12;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -36,6 +44,7 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
         unbinder = ButterKnife.bind(this);
 
         setUpRecyclerView();
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     private void setUpRecyclerView() {
@@ -61,6 +70,20 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
     @OnClick(R.id.fab)
     public void onFabClicked() {
         Navigator.navigateToCreateReminderActivity(this);
+    }
+
+    @Override
+    public Loader<List<Reminder>> onCreateLoader(int id, Bundle args) {
+        return new ReminderLoader(this);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Reminder>> loader, List<Reminder> data) {
+        adapter.setReminders(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Reminder>> loader) {
     }
 
     @Override

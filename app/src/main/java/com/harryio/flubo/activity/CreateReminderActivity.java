@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 
 import com.harryio.flubo.DataLayout;
 import com.harryio.flubo.R;
+import com.harryio.flubo.data.ReminderDAO;
 import com.harryio.flubo.model.Reminder;
 import com.harryio.flubo.model.RepeatInterval;
 import com.harryio.flubo.utils.DateUtils;
@@ -147,6 +148,9 @@ public class CreateReminderActivity extends BaseActivity implements
                 .remindAt(calendar.getTimeInMillis())
                 .withRepeatInterval(repeatInterval)
                 .create();
+
+        ReminderDAO.insert(this, reminder);
+        finish();
     }
 
     private boolean isReminderDataValid() {
