@@ -1,7 +1,5 @@
 package com.harryio.flubo.model;
 
-import java.util.UUID;
-
 public class Reminder {
     private long id;
     private String title;
@@ -10,8 +8,9 @@ public class Reminder {
     private long remindTime = -1L;
     private String repeatInterval;
 
-    private Reminder(String title, String description, boolean completed, long remindTime,
+    private Reminder(long id, String title, String description, boolean completed, long remindTime,
                      String repeatInterval) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.completed = completed;
@@ -25,10 +24,6 @@ public class Reminder {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getTitle() {

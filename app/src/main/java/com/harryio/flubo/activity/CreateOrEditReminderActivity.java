@@ -72,7 +72,7 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
         return new Intent(context, CreateOrEditReminderActivity.class);
     }
 
-    public static Intent getCallingIntent(Context context, String reminderId) {
+    public static Intent getCallingIntent(Context context, long reminderId) {
         Intent intent = new Intent(context, CreateOrEditReminderActivity.class);
         intent.putExtra(ARG_REMINDER_ID, reminderId);
 
@@ -86,7 +86,6 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
         ButterKnife.bind(this);
 
         repeatIntervalStrings = getResources().getStringArray(R.array.repeat_intervals);
-        titleEdittext.requestFocus();
         setUpReminderIfPresent();
         setUpCalendar();
         setUpDateAndTimePickerDialogs();
@@ -96,12 +95,15 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
     private void setUpReminderIfPresent() {
         Intent intent = getIntent();
         if (intent.hasExtra(ARG_REMINDER_ID)) {
-            String reminderId = intent.getStringExtra(ARG_REMINDER_ID);
-            //todo fetch reminder here
-            titleEdittext.setText(reminder.getTitle());
-            descriptionEdittext.setText(reminder.getDescription());
-            shouldSetReminder = reminder.isRemiderSet();
-            repeatInterval = reminder.getRepeatInterval();
+            long reminderId = intent.getLongExtra(ARG_REMINDER_ID, -1L);
+            reminder = ReminderDAO.query(this, reminderId);
+            if (reminder != null) {
+                titleEdittext.setText(reminder.getTitle());
+                titleEdittext.setSelection(reminder.getTitle().length());
+                descriptionEdittext.setText(reminder.getDescription());
+                shouldSetReminder = reminder.isRemiderSet();
+                repeatInterval = reminder.getRepeatInterval();
+            }
         }
     }
 

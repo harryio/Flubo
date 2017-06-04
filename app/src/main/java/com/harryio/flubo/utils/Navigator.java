@@ -11,7 +11,7 @@ public class Navigator {
         context.startActivity(intent);
     }
 
-    public static void navigateToEditRemiderActivity(Context context, String reminderId) {
+    public static void navigateToEditRemiderActivity(Context context, long reminderId) {
         Intent intent = CreateOrEditReminderActivity.getCallingIntent(context, reminderId);
         context.startActivity(intent);
     }
