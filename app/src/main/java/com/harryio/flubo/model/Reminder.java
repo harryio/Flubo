@@ -3,24 +3,28 @@ package com.harryio.flubo.model;
 import java.util.UUID;
 
 public class Reminder {
-    private String id;
+    private long id;
     private String title;
     private String description;
     private boolean completed;
     private long remindTime = -1L;
     private String repeatInterval;
 
-    private Reminder() {
-        id = UUID.randomUUID().toString();
-    }
-
-    private Reminder(String title, String description, boolean completed, long remindTime) {
-        this();
-
+    private Reminder(String title, String description, boolean completed, long remindTime,
+                     String repeatInterval) {
         this.title = title;
         this.description = description;
         this.completed = completed;
         this.remindTime = remindTime;
+        this.repeatInterval = repeatInterval;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getId() {
@@ -72,11 +76,17 @@ public class Reminder {
     }
 
     public static class Builder {
+        private long id;
         private String title;
         private String description;
         private boolean completed;
         private long remindTime = -1L;
         private RepeatInterval repeatInterval;
+
+        public Builder id(long id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder title(String title) {
             this.title = title;
@@ -104,7 +114,7 @@ public class Reminder {
         }
 
         public Reminder create() {
-            return new Reminder(title, description, completed, remindTime);
+            return new Reminder(id, title, description, completed, remindTime, repeatInterval.name());
         }
     }
 }
