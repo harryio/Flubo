@@ -14,7 +14,7 @@ import static com.harryio.flubo.data.ReminderContract.ReminderEntry.COLUMN_TIME_
 import static com.harryio.flubo.data.ReminderContract.ReminderEntry.COLUMN_TITLE;
 
 class DatabaseUtils {
-    static ContentValues getInsertContentValues(Reminder reminder) {
+    static ContentValues getContentValuesForReminder(Reminder reminder) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_TITLE, reminder.getTitle());
         contentValues.put(COLUMN_DESCRIPTION, reminder.getDescription());

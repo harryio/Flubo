@@ -86,6 +86,14 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         clickListener.onListCheckboxClicked(reminders.get(position), isChecked);
     }
 
+    public Reminder getReminderAt(int position) {
+        return reminders.get(position);
+    }
+
+    public List<Reminder> getReminders() {
+        return new ArrayList<>(reminders);
+    }
+
     @Override
     public int getItemCount() {
         return reminders.size();
