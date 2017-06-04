@@ -16,9 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CreateOrEditReminderActivity"
-            android:windowSoftInputMode="stateVisible">
-        </activity>
+        <activity android:name=".activity.CreateOrEditReminderActivity" />
 
         <provider
             android:name="com.harryio.flubo.data.ReminderProvider"

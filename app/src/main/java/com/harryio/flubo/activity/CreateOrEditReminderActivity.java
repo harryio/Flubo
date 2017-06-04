@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -140,6 +141,11 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
                 shouldSetReminder = reminder.isRemiderSet();
                 repeatInterval = reminder.getRepeatInterval();
             }
+        }
+
+        if (reminder == null) {
+            titleEdittext.requestFocus();
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
     }
 
