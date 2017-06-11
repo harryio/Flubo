@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,6 +46,9 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
     RecyclerView recyclerView;
 
     private Unbinder unbinder;
+
+    private Handler handler;
+
     private ReminderAdapter adapter;
     private ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper
             .SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -82,6 +86,7 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
 
+        handler = new Handler();
         setUpToolbar();
         setUpRecyclerView();
         getLoaderManager().initLoader(LOADER_ID, null, this);
@@ -137,11 +142,25 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
     }
 
     @Override
-    public void onListCheckboxClicked(Reminder reminder, boolean isChecked) {
-        if (reminder.isCompleted() != isChecked) {
-            reminder.setCompleted(isChecked);
-            ReminderDAO.update(this, reminder);
-        }
+    public void onListCheckboxClicked(final Reminder reminder, final boolean isChecked) {
+        handler.removeCallbacksAndMessages(null);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (reminder.isCompleted() != isChecked) {
+                    reminder.setCompleted(isChecked);
+                    ReminderDAO.update(MainActivity.this, reminder);
+                }
+
+                if (isChecked) {
+                    AlarmHelperService.startActionDeleteAlarm(MainActivity.this, reminder.getId());
+                } else {
+                    if (reminder.getRemindTime() > System.currentTimeMillis()) {
+                        AlarmHelperService.startActionCreateAlarm(MainActivity.this, reminder.getId());
+                    }
+                }
+            }
+        }, 1000);
     }
 
     @OnClick(R.id.fab)

@@ -28,18 +28,18 @@ public class NotificationPublisher extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         long id = intent.getLongExtra(EXTRA_REMINDER_ID, -1L);
         Reminder reminder = ReminderDAO.findReminderById(context, id);
-        if (reminder != null) {
-            Notification notification = NotificationFactory
-                    .getReminderNotification(context, reminder);
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify((int) id, notification);
+        if (reminder == null || reminder.isCompleted()) return;
 
-            if (reminder.getRepeatInterval() != RepeatInterval.ONE_TIME) {
-                setNextAlarm(context, reminder);
-            } else {
-                reminder.setCompleted(true);
-                ReminderDAO.update(context, reminder);
-            }
+        Notification notification = NotificationFactory
+                .getReminderNotification(context, reminder);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify((int) id, notification);
+
+        if (reminder.getRepeatInterval() != RepeatInterval.ONE_TIME) {
+            setNextAlarm(context, reminder);
+        } else {
+            reminder.setCompleted(true);
+            ReminderDAO.update(context, reminder);
         }
     }
 
