@@ -19,6 +19,7 @@ import com.harryio.flubo.adapters.ReminderAdapter;
 import com.harryio.flubo.data.ReminderDAO;
 import com.harryio.flubo.data.ReminderLoader;
 import com.harryio.flubo.model.Reminder;
+import com.harryio.flubo.service.AlarmHelperService;
 import com.harryio.flubo.utils.Navigator;
 
 import java.util.List;
@@ -56,12 +57,15 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             final Reminder reminder = adapter.getReminderAt(viewHolder.getAdapterPosition());
+            AlarmHelperService.startActionDeleteAlarm(MainActivity.this, reminder.getId());
             ReminderDAO.delete(MainActivity.this, reminder.getId());
             Snackbar snackbar = Snackbar.make(rootView, "Reminder Deleted", Snackbar.LENGTH_LONG)
                     .setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             ReminderDAO.insert(MainActivity.this, reminder);
+                            AlarmHelperService.startActionCreateAlarm(MainActivity.this,
+                                    reminder.getId());
                         }
                     });
             snackbar.setActionTextColor(Color.RED);
@@ -91,12 +95,14 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
                 switch (item.getItemId()) {
                     case R.id.item_delete_all:
                         final List<Reminder> reminders = adapter.getReminders();
+                        AlarmHelperService.startActionDeleteAllAlarms(MainActivity.this);
                         ReminderDAO.deleteAll(MainActivity.this);
                         Snackbar snackbar = Snackbar.make(rootView, "All reminders deleted", Snackbar.LENGTH_LONG)
                                 .setAction("UNDO", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         ReminderDAO.insert(MainActivity.this, reminders);
+                                        AlarmHelperService.startActionCreateAllAlarms(MainActivity.this);
                                     }
                                 });
                         snackbar.setActionTextColor(Color.RED);

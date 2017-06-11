@@ -3,6 +3,7 @@ package com.harryio.flubo.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 
 import com.harryio.flubo.model.Reminder;
 
@@ -11,14 +12,15 @@ import java.util.List;
 import static android.provider.BaseColumns._ID;
 import static com.harryio.flubo.data.ReminderContract.ReminderEntry.buildReminderUri;
 import static com.harryio.flubo.data.ReminderContract.ReminderEntry.getReminderListUri;
+import static com.harryio.flubo.data.ReminderContract.ReminderEntry.getScheduledRemindersUri;
 
 public class ReminderDAO {
-    public static void insert(Context context, Reminder reminder) {
+    public static Uri insert(Context context, Reminder reminder) {
         ContentValues contentValues = DatabaseUtils.getContentValuesForReminder(reminder);
-        context.getContentResolver().insert(getReminderListUri(), contentValues);
+        return context.getContentResolver().insert(getReminderListUri(), contentValues);
     }
 
-    public static Reminder query(Context context, long id) {
+    public static Reminder findReminderById(Context context, long id) {
         if (id == -1L) return null;
 
         Cursor cursor = context.getContentResolver().query(buildReminderUri(id), null, null, null, null);
@@ -30,6 +32,13 @@ public class ReminderDAO {
         }
 
         return null;
+    }
+
+    public static List<Reminder> findRemindersByCompletedStatus(Context context, boolean completed) {
+        Cursor cursor = context.getContentResolver().query(getScheduledRemindersUri(completed),
+                null, null, null, null);
+
+        return DatabaseUtils.getRemindersFromCursor(cursor);
     }
 
     public static void update(Context context, long id, Reminder reminder) {

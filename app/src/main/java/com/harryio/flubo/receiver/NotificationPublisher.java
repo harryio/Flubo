@@ -26,7 +26,7 @@ public class NotificationPublisher extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         long id = intent.getLongExtra(EXTRA_REMINDER_ID, -1L);
-        Reminder reminder = ReminderDAO.query(context, id);
+        Reminder reminder = ReminderDAO.findReminderById(context, id);
         if (reminder != null) {
             Notification notification = NotificationFactory
                     .getReminderNotification(context, reminder);

@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 
 import static android.provider.BaseColumns._ID;
 import static com.harryio.flubo.data.ReminderContract.CONTENT_AUTHORITY;
+import static com.harryio.flubo.data.ReminderContract.ReminderEntry.COLUMN_COMPLETED;
 import static com.harryio.flubo.data.ReminderContract.ReminderEntry.CONTENT_TYPE_ITEM;
 import static com.harryio.flubo.data.ReminderContract.ReminderEntry.CONTENT_TYPE_LIST;
 import static com.harryio.flubo.data.ReminderContract.ReminderEntry.TABLE_NAME;
@@ -20,6 +21,7 @@ import static com.harryio.flubo.data.ReminderContract.ReminderEntry.TABLE_NAME;
 public class ReminderProvider extends ContentProvider {
     private static final int REMINDER_ITEM = 100;
     private static final int REMINDER_LIST = 101;
+    private static final int SCHEDULED_REMINDER_ITEM = 102;
 
     private ReminderDbHelper dbHelper;
 
@@ -27,6 +29,7 @@ public class ReminderProvider extends ContentProvider {
 
     static {
         uriMatcher.addURI(CONTENT_AUTHORITY, TABLE_NAME + "/#", REMINDER_ITEM);
+        uriMatcher.addURI(CONTENT_AUTHORITY, TABLE_NAME + "/*/#", SCHEDULED_REMINDER_ITEM);
         uriMatcher.addURI(CONTENT_AUTHORITY, TABLE_NAME, REMINDER_LIST);
     }
 
@@ -44,6 +47,9 @@ public class ReminderProvider extends ContentProvider {
                 return CONTENT_TYPE_ITEM;
 
             case REMINDER_LIST:
+                return CONTENT_TYPE_LIST;
+
+            case SCHEDULED_REMINDER_ITEM:
                 return CONTENT_TYPE_LIST;
 
             default:
@@ -77,6 +83,12 @@ public class ReminderProvider extends ContentProvider {
                         null,
                         null,
                         sortOrder);
+                break;
+
+            case SCHEDULED_REMINDER_ITEM:
+                String completed = uri.getPathSegments().get(2);
+                cursor = db.query(TABLE_NAME, null, COLUMN_COMPLETED + " = ? ",
+                        new String[]{completed}, null, null, null);
                 break;
 
             default:
