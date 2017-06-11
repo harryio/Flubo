@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +27,7 @@ import com.harryio.flubo.customview.DataLayout;
 import com.harryio.flubo.data.ReminderDAO;
 import com.harryio.flubo.model.Reminder;
 import com.harryio.flubo.model.RepeatInterval;
+import com.harryio.flubo.service.AlarmHelperService;
 import com.harryio.flubo.utils.DateUtils;
 import com.harryio.flubo.utils.PopupUtils;
 import com.harryio.flubo.utils.Utils;
@@ -114,6 +117,10 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
                                     new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    if (reminder.isRemiderSet()) {
+                                        AlarmHelperService.startActionDeleteAlarm(
+                                                CreateOrEditReminderActivity.this, reminder.getId());
+                                    }
                                     ReminderDAO.delete(CreateOrEditReminderActivity.this, reminder.getId());
                                     finish();
                                 }
@@ -133,7 +140,7 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
         Intent intent = getIntent();
         if (intent.hasExtra(ARG_REMINDER_ID)) {
             long reminderId = intent.getLongExtra(ARG_REMINDER_ID, -1L);
-            reminder = ReminderDAO.query(this, reminderId);
+            reminder = ReminderDAO.findReminderById(this, reminderId);
             if (reminder != null) {
                 titleEdittext.setText(reminder.getTitle());
                 titleEdittext.setSelection(reminder.getTitle().length());
@@ -238,9 +245,16 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
                 .withRepeatInterval(repeatInterval);
         if (reminder != null) {
             builder.id(reminder.getId());
-            ReminderDAO.update(this, reminder.getId(), builder.create());
+            ReminderDAO.update(this, builder.create());
+            if (reminder.isRemiderSet()) {
+                AlarmHelperService.startActionUpdateAlarm(this, reminder.getId());
+            }
         } else {
-            ReminderDAO.insert(this, builder.create());
+            Reminder reminder = builder.create();
+            Uri uri = ReminderDAO.insert(this, reminder);
+            if (reminder.isRemiderSet()) {
+                AlarmHelperService.startActionCreateAlarm(this, ContentUris.parseId(uri));
+            }
         }
 
         finish();

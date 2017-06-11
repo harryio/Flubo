@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import com.harryio.flubo.adapters.ReminderAdapter;
 import com.harryio.flubo.data.ReminderDAO;
 import com.harryio.flubo.data.ReminderLoader;
 import com.harryio.flubo.model.Reminder;
+import com.harryio.flubo.service.AlarmHelperService;
 import com.harryio.flubo.utils.Navigator;
 
 import java.util.List;
@@ -44,6 +46,9 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
     RecyclerView recyclerView;
 
     private Unbinder unbinder;
+
+    private Handler handler;
+
     private ReminderAdapter adapter;
     private ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper
             .SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -56,12 +61,15 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             final Reminder reminder = adapter.getReminderAt(viewHolder.getAdapterPosition());
+            AlarmHelperService.startActionDeleteAlarm(MainActivity.this, reminder.getId());
             ReminderDAO.delete(MainActivity.this, reminder.getId());
             Snackbar snackbar = Snackbar.make(rootView, "Reminder Deleted", Snackbar.LENGTH_LONG)
                     .setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             ReminderDAO.insert(MainActivity.this, reminder);
+                            AlarmHelperService.startActionCreateAlarm(MainActivity.this,
+                                    reminder.getId());
                         }
                     });
             snackbar.setActionTextColor(Color.RED);
@@ -78,6 +86,7 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
 
+        handler = new Handler();
         setUpToolbar();
         setUpRecyclerView();
         getLoaderManager().initLoader(LOADER_ID, null, this);
@@ -91,12 +100,14 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
                 switch (item.getItemId()) {
                     case R.id.item_delete_all:
                         final List<Reminder> reminders = adapter.getReminders();
+                        AlarmHelperService.startActionDeleteAllAlarms(MainActivity.this);
                         ReminderDAO.deleteAll(MainActivity.this);
                         Snackbar snackbar = Snackbar.make(rootView, "All reminders deleted", Snackbar.LENGTH_LONG)
                                 .setAction("UNDO", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         ReminderDAO.insert(MainActivity.this, reminders);
+                                        AlarmHelperService.startActionCreateAllAlarms(MainActivity.this);
                                     }
                                 });
                         snackbar.setActionTextColor(Color.RED);
@@ -131,8 +142,25 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
     }
 
     @Override
-    public void onListCheckboxClicked(Reminder reminder, boolean isChecked) {
+    public void onListCheckboxClicked(final Reminder reminder, final boolean isChecked) {
+        handler.removeCallbacksAndMessages(null);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (reminder.isCompleted() != isChecked) {
+                    reminder.setCompleted(isChecked);
+                    ReminderDAO.update(MainActivity.this, reminder);
+                }
 
+                if (isChecked) {
+                    AlarmHelperService.startActionDeleteAlarm(MainActivity.this, reminder.getId());
+                } else {
+                    if (reminder.getRemindTime() > System.currentTimeMillis()) {
+                        AlarmHelperService.startActionCreateAlarm(MainActivity.this, reminder.getId());
+                    }
+                }
+            }
+        }, 1000);
     }
 
     @OnClick(R.id.fab)

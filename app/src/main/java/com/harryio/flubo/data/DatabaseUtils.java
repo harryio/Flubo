@@ -6,6 +6,9 @@ import android.database.Cursor;
 import com.harryio.flubo.model.Reminder;
 import com.harryio.flubo.model.RepeatInterval;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.provider.BaseColumns._ID;
 import static com.harryio.flubo.data.ReminderContract.ReminderEntry.COLUMN_COMPLETED;
 import static com.harryio.flubo.data.ReminderContract.ReminderEntry.COLUMN_DESCRIPTION;
@@ -19,7 +22,7 @@ class DatabaseUtils {
         contentValues.put(COLUMN_TITLE, reminder.getTitle());
         contentValues.put(COLUMN_DESCRIPTION, reminder.getDescription());
         contentValues.put(COLUMN_TIME_MILLIS, reminder.getRemindTime());
-        contentValues.put(COLUMN_COMPLETED, reminder.isCompleted() ? 0 : 1);
+        contentValues.put(COLUMN_COMPLETED, reminder.isCompleted() ? 1 : 0);
         contentValues.put(COLUMN_REPEAT_INTERVAL, reminder.getRepeatInterval().name());
 
         return contentValues;
@@ -42,5 +45,20 @@ class DatabaseUtils {
                         : RepeatInterval.valueOf(repeatInterval))
                 .isCompleted(completed)
                 .create();
+    }
+
+    static List<Reminder> getRemindersFromCursor(Cursor cursor) {
+        if (cursor == null) return null;
+
+        List<Reminder> reminders = new ArrayList<>(cursor.getCount());
+        try {
+            while (cursor.moveToNext()) {
+                reminders.add(constructReminderFromCursor(cursor));
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return reminders;
     }
 }

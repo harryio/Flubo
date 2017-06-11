@@ -31,5 +31,10 @@ class ReminderContract {
         static Uri getReminderListUri() {
             return CONTENT_URI;
         }
+
+        static Uri getScheduledRemindersUri(boolean completed) {
+            return CONTENT_URI.buildUpon().appendPath("completed")
+                    .appendPath(String.valueOf(completed ? 1 : 0)).build();
+        }
     }
 }
