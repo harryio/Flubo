@@ -138,7 +138,10 @@ public class MainActivity extends BaseActivity implements ReminderAdapter.ClickL
 
     @Override
     public void onListCheckboxClicked(Reminder reminder, boolean isChecked) {
-
+        if (reminder.isCompleted() != isChecked) {
+            reminder.setCompleted(isChecked);
+            ReminderDAO.update(this, reminder);
+        }
     }
 
     @OnClick(R.id.fab)
