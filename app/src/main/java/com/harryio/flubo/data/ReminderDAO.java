@@ -41,14 +41,14 @@ public class ReminderDAO {
         return DatabaseUtils.getRemindersFromCursor(cursor);
     }
 
-    public static void update(Context context, long id, Reminder reminder) {
+    public static void update(Context context, Reminder reminder) {
         ContentValues contentValues = DatabaseUtils.getContentValuesForReminder(reminder);
-        context.getContentResolver().update(getReminderListUri(), contentValues, _ID + "=?",
-                new String[]{String.valueOf(id)});
+        context.getContentResolver().update(getReminderListUri(), contentValues, _ID + " = ? ",
+                new String[]{String.valueOf(reminder.getId())});
     }
 
     public static void delete(Context context, long id) {
-        context.getContentResolver().delete(getReminderListUri(), _ID + "=?",
+        context.getContentResolver().delete(getReminderListUri(), _ID + " = ? ",
                 new String[]{String.valueOf(id)});
     }
 

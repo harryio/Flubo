@@ -35,6 +35,9 @@ public class NotificationPublisher extends BroadcastReceiver {
 
             if (reminder.getRepeatInterval() != RepeatInterval.ONE_TIME) {
                 setNextAlarm(reminder);
+            } else {
+                reminder.setCompleted(true);
+                ReminderDAO.update(context, reminder);
             }
         }
     }

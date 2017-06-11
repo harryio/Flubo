@@ -245,7 +245,7 @@ public class CreateOrEditReminderActivity extends BaseActivity implements
                 .withRepeatInterval(repeatInterval);
         if (reminder != null) {
             builder.id(reminder.getId());
-            ReminderDAO.update(this, reminder.getId(), builder.create());
+            ReminderDAO.update(this, builder.create());
             if (reminder.isRemiderSet()) {
                 AlarmHelperService.startActionUpdateAlarm(this, reminder.getId());
             }
