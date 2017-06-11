@@ -9,6 +9,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import com.harryio.flubo.data.ReminderDAO;
 import com.harryio.flubo.model.Reminder;
 import com.harryio.flubo.model.RepeatInterval;
+import com.harryio.flubo.service.AlarmHelperService;
 import com.harryio.flubo.utils.NotificationFactory;
 
 import java.util.Calendar;
@@ -34,7 +35,7 @@ public class NotificationPublisher extends BroadcastReceiver {
             notificationManager.notify((int) id, notification);
 
             if (reminder.getRepeatInterval() != RepeatInterval.ONE_TIME) {
-                setNextAlarm(reminder);
+                setNextAlarm(context, reminder);
             } else {
                 reminder.setCompleted(true);
                 ReminderDAO.update(context, reminder);
@@ -42,7 +43,7 @@ public class NotificationPublisher extends BroadcastReceiver {
         }
     }
 
-    private void setNextAlarm(Reminder reminder) {
+    private void setNextAlarm(Context context, Reminder reminder) {
         RepeatInterval repeatInterval = reminder.getRepeatInterval();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(reminder.getRemindTime());
@@ -67,5 +68,9 @@ public class NotificationPublisher extends BroadcastReceiver {
             default:
                 throw new IllegalStateException("No interval defined for " + repeatInterval.name());
         }
+
+        reminder.setRemindTime(calendar.getTimeInMillis());
+        ReminderDAO.update(context, reminder);
+        AlarmHelperService.startActionCreateAlarm(context, reminder.getId());
     }
 }
